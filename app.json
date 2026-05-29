@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "LeafDoc Nepal",
+    "slug": "leafdoc-nepal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/leaficon.jpeg",
+    "splash": {
+      "image": "./assets/images/leaficon.jpeg",
+      "resizeMode": "contain",
+      "backgroundColor": "#2d6a4f"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/leaficon.jpeg",
+        "backgroundColor": "#2d6a4f"
+      },
+      "package": "com.dhanbasnet.leafdocnepal"
+    },
+    "ios": {
+      "bundleIdentifier": "com.dhanbasnet.leafdocnepal"
+    },
+    "scheme": "leafdoc",
+    "extra": {
+      "eas": {
+        "projectId": "40de55f0-3197-442f-81e8-50ed3ae1f04d"
+      }
+    }
+  }
+}

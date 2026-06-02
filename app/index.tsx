@@ -32,11 +32,11 @@ const LANG = {
     bad1: 'Multiple plants in frame', bad2: 'Blurry or out of focus',
     bad3: 'Poor lighting or shadows', bad4: 'Watermarked stock photo',
     cropGuide: 'Crop Photo Guide', healthy: 'Healthy',
-    appleDesc: 'Close-up of one leaf showing spots',
-    bananaDesc: 'Yellow/brown streaks on leaf',
-    cornDesc: 'Leaf with lesions or discoloration',
-    potatoDesc: 'Brown spots or dark patches',
-    riceDesc: 'Diamond-shaped lesions or brown tips',
+    appleDesc: "Take a close-up of one apple leaf showing spots or color changes.",
+    bananaDesc: "Capture yellow or brown streak patterns on the banana leaf.",
+    cornDesc: "Focus on a single corn leaf with visible lesions or discoloration.",
+    potatoDesc: "Photograph brown spots or dark patches on potato leaves clearly.",
+    riceDesc: "Take photo of rice paddy leaf with diamond-shaped lesions or brown tips.",
   },
   ne: {
     subtitle: 'एआई बिरुवा रोग पहिचान',
@@ -55,29 +55,29 @@ const LANG = {
     bad1: 'फ्रेममा धेरै बिरुवा', bad2: 'धमिलो वा फोकस बाहिर',
     bad3: 'कमजोर प्रकाश वा छाया', bad4: 'वाटरमार्क भएको फोटो',
     cropGuide: 'बाली फोटो गाइड', healthy: 'स्वस्थ',
-    appleDesc: 'दाग देखाउने एउटा पातको नजिकको फोटो',
-    bananaDesc: 'पातमा पहेलो/खैरो धर्काहरू',
-    cornDesc: 'घाउ वा रंग परिवर्तन भएको पात',
-    potatoDesc: 'खैरो दाग वा कालो धब्बाहरू',
-    riceDesc: 'हीरा आकारका घाउ वा खैरो टुप्पो',
+     appleDesc: "दाग वा रङ परिवर्तन भएको एउटा स्याउको पात नजिकबाट खिच्नुहोस्।",
+    bananaDesc: "केराको पातमा पहेंलो वा खैरो धर्काहरू स्पष्टसँग कैद गर्नुहोस्।",
+    cornDesc: "देखिने दाग वा रङ उडेको एउटा मकैको पातमा केन्द्रित हुनुहोस्।",
+    potatoDesc: "आलुको पातमा खैरो दाग वा गाढा धब्बाहरू स्पष्ट रूपमा फोटो खिच्नुहोस्।",
+    riceDesc: "हीरा आकारको दाग वा खैरो टुप्पा भएको धानको पातको फोटो खिच्नुहोस्।",
   }
 };
 
 const CROPS = {
   en: [
-    { emoji: '🍎', name: 'Apple',   diseases: ['Healthy', 'Rot'],                          desc: 'appleDesc' },
-    { emoji: '🍌', name: 'Banana',  diseases: ['Healthy', 'Panama', 'Sigatoka'],            desc: 'bananaDesc' },
-    { emoji: '🌽', name: 'Corn',    diseases: ['Healthy', 'Blight', 'Gray Spot', 'Rust'],   desc: 'cornDesc' },
-    { emoji: '🥔', name: 'Potato',  diseases: ['Healthy', 'Early Blight', 'Late Blight'],   desc: 'potatoDesc' },
-    { emoji: '🌾', name: 'Rice',    diseases: ['Healthy', 'Blast', 'Blight', 'Brown Spot'], desc: 'riceDesc' },
+    { image: require('../assets/images/apple.jpg'), name: 'Apple', diseases: ['Healthy', 'Rot'], desc: 'appleDesc' },
+    { image: require('../assets/images/banana.jpg'), name: 'Banana', diseases: ['Healthy', 'Panama', 'Sigatoka'], desc: 'bananaDesc' },
+    { image: require('../assets/images/corn.jpg'), name: 'Corn', diseases: ['Healthy', 'Blight', 'Gray Spot','Rust'], desc: 'cornDesc' },
+    { image: require('../assets/images/potato.jpg'), name: 'Potato', diseases: ['Healthy', 'Early Blight', 'Late Blight'], desc: 'potatoDesc' },
+    { image: require('../assets/images/rice.jpg'), name: 'Rice', diseases: ['Healthy', 'Blast', 'Blight', 'Brown Spot'], desc: 'riceDesc' },
   ],
   ne: [
-    { emoji: '🍎', name: 'स्याउ',   diseases: ['स्वस्थ', 'सडन'],                                    desc: 'appleDesc' },
-    { emoji: '🍌', name: 'केरा',    diseases: ['स्वस्थ', 'पनामा', 'सिगाटोका'],                      desc: 'bananaDesc' },
-    { emoji: '🌽', name: 'मकै',     diseases: ['स्वस्थ', 'ब्लाइट', 'खैरो दाग', 'रस्ट'],            desc: 'cornDesc' },
-    { emoji: '🥔', name: 'आलु',    diseases: ['स्वस्थ', 'प्रारम्भिक ब्लाइट', 'ढिलो ब्लाइट'],       desc: 'potatoDesc' },
-    { emoji: '🌾', name: 'धान',     diseases: ['स्वस्थ', 'ब्लास्ट', 'ब्लाइट', 'खैरो दाग'],         desc: 'riceDesc' },
-  ]
+    { image: require('../assets/images/apple.jpg'), name: 'स्याउ', diseases: ['स्वस्थ', 'सड्न'], desc: 'appleDesc' },
+    { image: require('../assets/images/banana.jpg'), name: 'केरा', diseases: ['स्वस्थ', 'पनामा', 'सिगाटोका'], desc: 'bananaDesc' },
+    { image: require('../assets/images/corn.jpg'), name: 'मकै', diseases: ['स्वस्थ', 'ब्लाइट', 'खैरो दाग','रस्ट'], desc: 'cornDesc' },
+    { image: require('../assets/images/potato.jpg'), name: 'आलु', diseases: ['स्वस्थ', 'प्रारम्भिक ब्लाइट', 'ढिलो ब्लाइट'], desc: 'potatoDesc' },
+    { image: require('../assets/images/rice.jpg'), name: 'धान', diseases: ['स्वस्थ', 'ब्लास्ट', 'ब्लाइट','ब्राउन स्पट'], desc: 'riceDesc' },
+  ],
 };
 
 export default function HomeScreen() {
@@ -212,25 +212,36 @@ export default function HomeScreen() {
             ))}
           </View>
         </View>
-
-        {/* Crop guide */}
-        <Text style={styles.cropGuideTitle}>{t.cropGuide}</Text>
-        {CROPS[lang].map((crop, i) => (
-          <View key={i} style={styles.cropGuideCard}>
-            <Text style={styles.cropEmoji}>{crop.emoji}</Text>
-            <View style={styles.cropGuideInfo}>
-              <Text style={styles.cropGuideName}>{crop.name}</Text>
-              <View style={styles.diseaseTags}>
-                {crop.diseases.map((d, j) => (
-                  <View key={j} style={[styles.diseaseTag, j === 0 ? styles.healthyTag : styles.sickTag]}>
-                    <Text style={[styles.diseaseTagText, j === 0 ? styles.healthyText : styles.sickText]}>{d}</Text>
-                  </View>
-                ))}
-              </View>
-              <Text style={styles.cropGuideDesc}>{(t as any)[crop.desc]}</Text>
+      {/* Crop guide */}
+      <Text style={styles.cropGuideTitle}>{t.cropGuide}</Text>
+      {(CROPS[lang as 'en' | 'ne'] || CROPS.en).map((crop: any, i: number) => (
+        <View key={i} style={styles.cropGuideCard}>
+          {/* Full width, highly visible dataset image replacing the emoji */}
+          <Image 
+            source={crop.image} 
+            style={{ width: '100%', height: 160, borderRadius: 8, marginBottom: 12 }} 
+            resizeMode="cover" 
+          />
+          
+                  <View style={styles.cropGuideInfo}>
+            <Text style={styles.cropGuideName}>{crop.name}</Text>
+            <View style={styles.diseaseTags}>
+              {(crop.diseases as string[]).map((d, j) => (
+                <View key={j} style={[styles.diseaseTag, j === 0 ? styles.healthyTag : null]}>
+                  <Text style={[styles.diseaseTagText, j === 0 ? styles.healthyText : null]}>{d}</Text>
+                </View>
+              ))}
             </View>
+              <Text style={styles.cropGuideDesc}>
+              {crop.desc && (LANG[lang as 'en' | 'ne'] as any)[crop.desc] 
+                ? (LANG[lang as 'en' | 'ne'] as any)[crop.desc] 
+                : ''
+              }
+            </Text>
           </View>
-        ))}
+
+        </View>
+      ))}
       </View>
 
       <Text style={styles.footer}>{t.footer}</Text>
@@ -282,7 +293,7 @@ const styles = StyleSheet.create({
   compareItem: { fontSize: 12, color: '#6b7280', paddingVertical: 3, lineHeight: 18 },
 
   cropGuideTitle: { fontSize: 17, fontWeight: '800', color: '#2d6a4f', marginBottom: 14 },
-  cropGuideCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: 'white', borderRadius: 14, padding: 14, marginBottom: 10, borderWidth: 1.5, borderColor: '#e0f0e8' },
+  cropGuideCard: { alignItems: 'flex-start', backgroundColor: 'white', borderRadius: 14, padding: 14, marginBottom: 10, borderWidth: 1.5, borderColor: '#e0f0e8' },
   cropEmoji: { fontSize: 32, marginRight: 12, marginTop: 2 },
   cropGuideInfo: { flex: 1 },
   cropGuideName: { fontSize: 15, fontWeight: '800', color: '#2d6a4f', marginBottom: 6 },
@@ -293,7 +304,11 @@ const styles = StyleSheet.create({
   diseaseTagText: { fontSize: 11, fontWeight: '700' },
   healthyText: { color: '#065f46' },
   sickText: { color: '#991b1b' },
-  cropGuideDesc: { fontSize: 12, color: '#6b7280', lineHeight: 18 },
-
+  cropGuideDesc: {
+  fontSize: 14,
+  color: '#444',
+  lineHeight: 20,
+  marginTop: 8,
+},
   footer: { marginTop: 36, fontSize: 12, color: '#aaa', textAlign: 'center', paddingHorizontal: 20 },
 });

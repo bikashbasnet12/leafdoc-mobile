@@ -19,7 +19,7 @@ const LANG = {
     upload: 'Upload from Gallery',
     analyzing: 'Analyzing leaf...',
     supported: 'Supported Crops',
-    footer: 'Built by Dhan Basnet — LeafDoc Nepal 2026',
+    footer: 'Built by Dhan Basnet & Team — LeafDoc Nepal 2026',
     error: 'Could not connect to server. Check your internet.',
     permission: 'Please allow camera access.',
   },

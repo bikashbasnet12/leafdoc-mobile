@@ -102,45 +102,47 @@ export default function HomeScreen() {
     if (!result.canceled) await sendImage(result.assets[0]);
   };
 
-  const sendImage = async (asset: any) => {
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', { uri: asset.uri, name: 'leaf.jpg', type: 'image/jpeg' } as any);
-      formData.append('source', 'upload');
+const sendImage = async (asset: any) => {
+  setLoading(true);
+  try {
+    const formData = new FormData();
+    formData.append('file', { uri: asset.uri, name: 'leaf.jpg', type: 'image/jpeg' } as any);
+    formData.append('client', 'mobile');  // triggers JSON response from Flask
+    formData.append('lang', 'en');        // Flask needs this but we send both anyway
 
-      const response = await fetch(API_URL, {
-        method: 'POST', body: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
-      const html = await response.text();
-      const plantMatch     = html.match(/class="info-val">(.*?)<\/div>/);
-      const diseaseMatch   = html.match(/class="section-body">(.*?)<\/div>/);
-      const treatmentMatch = html.match(/class="section-body red">(.*?)<\/div>/);
-      const fertMatch      = html.match(/class="section-body blue">(.*?)<\/div>/);
-      const confMatch      = html.match(/class="conf-value">([\d.]+)%<\/span>/);
-      const sevMatch       = html.match(/class="severity-badge"[^>]*>(.*?)<\/span>/);
+    const json = await response.json();
+    const data = json.data;  // Flask returns { status, data: {...} }
 
-      router.push({
-        pathname: '/result' as any,
-        params: {
-          plant:      plantMatch?.[1] ?? 'Unknown',
-          disease:    diseaseMatch?.[1]?.trim() ?? 'Unknown',
-          treatment:  treatmentMatch?.[1]?.trim() ?? 'N/A',
-          fertilizer: fertMatch?.[1]?.trim() ?? 'N/A',
-          confidence: confMatch?.[1] ?? '0',
-          severity:   sevMatch?.[1]?.trim() ?? 'Unknown',
-          imageUri:   asset.uri,
-          lang:       lang,
-        },
-      });
-    } catch (err) {
-      Alert.alert('', t.error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    router.push({
+      pathname: '/result' as any,
+      params: {
+        plant_en:      data.plant_en,
+        plant_ne:      data.plant_ne,
+        disease_en:    data.disease_en,
+        disease_ne:    data.disease_ne,
+        treatment_en:  data.treatment_en,
+        treatment_ne:  data.treatment_ne,
+        fertilizer_en: data.fertilizer_en,
+        fertilizer_ne: data.fertilizer_ne,
+        severity_en:   data.severity_en,
+        severity_ne:   data.severity_ne,
+        confidence:    data.confidence,
+        imageUri:      asset.uri,
+        lang:          lang,
+      },
+    });
+  } catch (err) {
+    Alert.alert('', t.error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

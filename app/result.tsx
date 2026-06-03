@@ -1,5 +1,8 @@
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import * as Speech from 'expo-speech';
+import { useState } from 'react';
+import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const SEVERITY_COLORS: Record<string, string> = {
   'None': '#22c55e', 'Low': '#84cc16', 'Medium': '#f59e0b',
@@ -16,9 +19,13 @@ const LANG = {
     healthy: 'This leaf appears healthy. No disease detected.',
     condition: 'DETECTED CONDITION',
     treatment: 'RECOMMENDED TREATMENT',
+    listen: 'Listen',
+    stop: 'Stop Audio',
     fertilizer: 'FERTILIZER ADVICE',
     buy: 'BUY PRODUCTS IN NEPAL',
     buyBtn: 'Shop on Kheti.farm Nepal',
+    findStore: 'Find Nearby Agro Store',
+    shareWhatsApp: 'Share via WhatsApp',
     again: 'Analyze Another Leaf',
     back: 'Back',
   },
@@ -31,9 +38,13 @@ const LANG = {
     healthy: 'यो पात स्वस्थ देखिन्छ। कुनै रोग पत्ता लागेन।',
     condition: 'पत्ता लागेको अवस्था',
     treatment: 'सिफारिस गरिएको उपचार',
+    listen: 'सुन्नुहोस्',
+    stop: 'अडियो रोक्नुहोस्',
     fertilizer: 'मल सल्लाह',
     buy: 'नेपालमा अनलाइन उत्पादन किन्नुहोस्',
     buyBtn: 'Kheti.farm Nepal मा किन्नुहोस्',
+    findStore: 'नजिकको कृषि पसल खोज्नुहोस्',
+    shareWhatsApp: 'WhatsApp मा साझा गर्नुहोस्',
     again: 'अर्को पात विश्लेषण गर्नुहोस्',
     back: 'अघिल्लो पृष्ठ',
   }
@@ -43,17 +54,48 @@ export default function ResultScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
 
-  const lang = (params.lang as 'en' | 'ne') || 'en';
-  const [currentLang, setCurrentLang] = useState(lang);
+  const initialLang = (params.lang as 'en' | 'ne') || 'en';
+  const [currentLang, setCurrentLang] = useState<'en' | 'ne'>(initialLang);
   const t = LANG[currentLang];
 
   const confidence = parseFloat(params.confidence as string);
-  const severity = params.severity as string;
-  const severityColor = SEVERITY_COLORS[severity] || '#6b7280';
+
+  // Pick the right language version of each field
+  const plant     = currentLang === 'en' ? (params.plant_en as string)     : (params.plant_ne as string);
+  const disease   = currentLang === 'en' ? (params.disease_en as string)   : (params.disease_ne as string);
+  const treatment = currentLang === 'en' ? (params.treatment_en as string) : (params.treatment_ne as string);
+  const fertilizer= currentLang === 'en' ? (params.fertilizer_en as string): (params.fertilizer_ne as string);
+  const severity  = currentLang === 'en' ? (params.severity_en as string)  : (params.severity_ne as string);
+
+  // Severity color always uses English key
+  const severityEn = params.severity_en as string;
+  const severityColor = SEVERITY_COLORS[severityEn] || '#6b7280';
 
   const confNote = confidence >= 85 ? t.high : confidence >= 65 ? t.mid : t.low;
 
   const toggleLang = () => setCurrentLang(currentLang === 'en' ? 'ne' : 'en');
+
+  const openNearbyStore = () => {
+    Linking.openURL('https://www.google.com/maps/search/agro+store+near+me');
+  };
+
+  const shareWhatsApp = () => {
+    // Always share in English for clarity
+    const message =
+      `${params.disease_en} detected on ${params.plant_en} leaf.\n\n` +
+      `Recommended treatment: ${params.treatment_en}\n\n` +
+      `Detected by LeafDoc Nepal`;
+    Linking.openURL(`https://wa.me/?text=${encodeURIComponent(message)}`);
+  };
+
+  const speakTreatment = () => {
+    Speech.stop();
+    if (!treatment) return;
+    Speech.speak(treatment, {
+      language: currentLang === 'ne' ? 'ne-NP' : 'en-US',
+      rate: 0.9,
+    });
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -92,7 +134,7 @@ export default function ResultScreen() {
         <View style={styles.infoGrid}>
           <View style={styles.infoBox}>
             <Text style={styles.infoLbl}>{t.plant}</Text>
-            <Text style={styles.infoVal}>{params.plant}</Text>
+            <Text style={styles.infoVal}>{plant}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoLbl}>{t.severity}</Text>
@@ -103,7 +145,7 @@ export default function ResultScreen() {
         </View>
 
         {/* HEALTHY BANNER */}
-        {severity === 'None' && (
+        {severityEn === 'None' && (
           <View style={styles.healthyBanner}>
             <Text style={styles.healthyText}>{t.healthy}</Text>
           </View>
@@ -113,15 +155,20 @@ export default function ResultScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t.condition}</Text>
           <View style={styles.sectionBody}>
-            <Text style={styles.sectionText}>{params.disease}</Text>
+            <Text style={styles.sectionText}>{disease}</Text>
           </View>
         </View>
 
         {/* TREATMENT */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.treatment}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{t.treatment}</Text>
+            <TouchableOpacity onPress={speakTreatment}>
+              <Ionicons name="volume-high" size={22} color="#2d6a4f" />
+            </TouchableOpacity>
+          </View>
           <View style={[styles.sectionBody, styles.sectionRed]}>
-            <Text style={styles.sectionText}>{params.treatment}</Text>
+            <Text style={styles.sectionText}>{treatment}</Text>
           </View>
         </View>
 
@@ -129,7 +176,7 @@ export default function ResultScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t.fertilizer}</Text>
           <View style={[styles.sectionBody, styles.sectionBlue]}>
-            <Text style={styles.sectionText}>{params.fertilizer}</Text>
+            <Text style={styles.sectionText}>{fertilizer}</Text>
           </View>
         </View>
 
@@ -144,6 +191,16 @@ export default function ResultScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* ACTION BUTTONS */}
+        <View style={styles.actionBtns}>
+          <TouchableOpacity style={[styles.actionBtn, styles.mapBtn]} onPress={openNearbyStore}>
+            <Text style={styles.mapBtnText}>{t.findStore}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.actionBtn, styles.whatsappBtn]} onPress={shareWhatsApp}>
+            <Text style={styles.whatsappBtnText}>{t.shareWhatsApp}</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* ANALYZE AGAIN */}
         <TouchableOpacity style={styles.againBtn} onPress={() => router.back()}>
           <Text style={styles.againText}>{t.again}</Text>
@@ -153,9 +210,6 @@ export default function ResultScreen() {
     </ScrollView>
   );
 }
-
-// Need useState import
-import { useState } from 'react';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fefae0' },
@@ -195,6 +249,7 @@ const styles = StyleSheet.create({
 
   section: { marginBottom: 18 },
   sectionTitle: { fontSize: 10, color: '#6b7280', fontWeight: '700', letterSpacing: 0.8, marginBottom: 8 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   sectionBody: { backgroundColor: '#f8fffe', borderLeftWidth: 4, borderLeftColor: '#74c69d', borderRadius: 10, padding: 14 },
   sectionRed: { borderLeftColor: '#ef4444', backgroundColor: '#fff5f5' },
   sectionBlue: { borderLeftColor: '#3b82f6', backgroundColor: '#f5f8ff' },
@@ -202,6 +257,14 @@ const styles = StyleSheet.create({
 
   buyBtn: { backgroundColor: '#2d6a4f', padding: 14, borderRadius: 12, alignItems: 'center' },
   buyBtnText: { color: 'white', fontWeight: '800', fontSize: 15 },
+
+  actionBtns: { gap: 10, marginBottom: 16 },
+  actionBtn: { paddingVertical: 14, borderRadius: 12, alignItems: 'center' },
+  mapBtn: { backgroundColor: '#e8f5e9', borderWidth: 2, borderColor: '#74c69d' },
+  mapBtnText: { color: '#2d6a4f', fontWeight: '800', fontSize: 14 },
+  whatsappBtn: { backgroundColor: '#25D366' },
+  whatsappBtnText: { color: 'white', fontWeight: '800', fontSize: 14 },
+
   againBtn: { backgroundColor: '#40916c', padding: 16, borderRadius: 14, alignItems: 'center', marginTop: 8 },
   againText: { color: 'white', fontWeight: '800', fontSize: 15 },
 });
